@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra sua Casa de Hogwarts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #4F4F4F;
+            color: white;
+        }
+        #quiz-container {
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background-color: #00CED1;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .options {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        label {
+            font-size: 18px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ddd;
+        }
+        #result {
+            font-size: 28px;
+            margin-top: 30px;
+        }
+      
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container" class="gryffindor">
+        <div id="quiz-content">
+            <h1>Descubra sua Casa de Hogwarts</h1>
+            <div id="question-section"></div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Qual das qualidades você mais valoriza?",
+                options: ["Coragem", "Inteligência", "Lealdade", "Ambição"],
+                houseColors: ["gryffindor", "ravenclaw", "hufflepuff", "slytherin"]
+            },
+            {
+                question: "O que você faria em uma situação de perigo?",
+                options: ["Enfrentaria o perigo de frente", "Analisaria a situação antes de agir", "Ajudaria os outros antes de si mesmo", "Usaria estratégias para sair da situação"],
+                houseColors: ["gryffindor", "ravenclaw", "hufflepuff", "slytherin"]
+            },
+            {
+                question: "Qual animal mágico você mais se identifica?",
+                options: ["Fênix", "Coruja", "Texugo", "Serpente"],
+                houseColors: ["gryffindor", "ravenclaw", "hufflepuff", "slytherin"]
+            },
+            {
+                question: "O que você mais preza em suas amizades?",
+                options: ["Lealdade", "Sabedoria", "Confiança", "Influência"],
+                houseColors: ["gryffindor", "ravenclaw", "hufflepuff", "slytherin"]
+            },
+            {
+                question: "Qual é seu maior objetivo na vida?",
+                options: ["Fazer a diferença", "Buscar conhecimento", "Ajudar as pessoas", "Alcançar o poder"],
+                houseColors: ["gryffindor", "ravenclaw", "hufflepuff", "slytherin"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        const answers = {
+            Gryffindor: 0,
+            Ravenclaw: 0,
+            Hufflepuff: 0,
+            Slytherin: 0
+        };
+
+        function loadQuestion() {
+            if (currentQuestion < quizData.length) {
+                const quizContainer = document.getElementById('quiz-container');
+                const questionSection = document.getElementById('question-section');
+                const questionData = quizData[currentQuestion];
+
+                quizContainer.className = quizData[currentQuestion].houseColors[currentQuestion];
+                questionSection.innerHTML = `
+                    <div class="question">${questionData.question}</div>
+                    <div class="options">
+                        ${questionData.options.map((option, index) => `
+                            <label>
+                                <input type="radio" name="answer" value="${option}" data-color="${questionData.houseColors[index]}">
+                                ${option}
+                            </label><br>
+                        `).join('')}
+                    </div>
+                    <button onclick="nextQuestion()">Próxima</button>
+                `;
+            } else {
+                showResult();
+            }
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                const house = selectedOption.dataset.color;
+                answers[house.charAt(0).toUpperCase() + house.slice(1)]++;
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                alert("Por favor, selecione uma resposta!");
+            }
+        }
+
+        function showResult() {
+    const house = Object.keys(answers).reduce((a, b) => answers[a] > answers[b] ? a : b);
+    const quizContainer = document.getElementById('quiz-container');
+
+    
+    if (house === "Gryffindor") {
+	
+        quizContainer.style.backgroundColor = "#740001"; 
+		
+    } else if (house === "Ravenclaw") {
+        quizContainer.style.backgroundColor = "#0e1a40"; 
+		
+    } else if (house === "Hufflepuff") {
+        quizContainer.style.backgroundColor = "#ffdb00"; 
+        quizContainer.style.color = "black"; 
+    } else if (house === "Slytherin") {
+        quizContainer.style.backgroundColor = "#1a472a"; 
+    }
+
+    quizContainer.innerHTML = `
+        <div id="result">Sua casa de Hogwarts é: <strong>${house}</strong>!</div>
+    `;
+}
+
+        loadQuestion();
+    </script>
+
+</body>
+</html>
